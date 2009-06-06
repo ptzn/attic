@@ -1,0 +1,37 @@
+#!/bin/sh
+
+BIN_DIR=/usr/bin
+RUBY18_BIN_DIR=/usr/bin
+RUBY19_BIN_DIR=/opt/ruby-1.9/bin
+
+if([ -z "$1" ] || ([ "$1" != "1.8" ] && [ "$1" != "1.9" ]))
+then
+  echo "Usage: change_ruby VERSION (1.8 or 1.9)"
+  exit 1
+fi
+
+remove_symlinks() {
+  for file in erb gem irb rake rdoc ri ruby testrb
+  do
+    rm -f $BIN_DIR/$file
+  done
+}
+
+create_symlinks() {
+  ruby_version=$1
+
+  case "$ruby_version" in
+    "1.8" ) ruby_bin_dir=$RUBY18_BIN_DIR;;
+    "1.9" ) ruby_bin_dir=$RUBY19_BIN_DIR;;
+  esac
+
+  for file in erb gem irb rake rdoc ri ruby testrb
+  do
+    ln -s $ruby_bin_dir/$file$ruby_version $BIN_DIR/$file
+  done
+}
+
+remove_symlinks
+create_symlinks $1
+
+exit

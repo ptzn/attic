@@ -3,6 +3,7 @@
 BIN_DIR=/usr/bin
 RUBY18_BIN_DIR=/usr/bin
 RUBY19_BIN_DIR=/opt/ruby-1.9/bin
+GEMS_HOME=/var/lib/gems
 
 if([ -z "$1" ] || ([ "$1" != "1.8" ] && [ "$1" != "1.9" ]))
 then
@@ -15,6 +16,7 @@ remove_symlinks() {
   do
     rm -f $BIN_DIR/$file
   done
+  rm -f $GEMS_HOME/bin
 }
 
 create_symlinks() {
@@ -29,6 +31,8 @@ create_symlinks() {
   do
     ln -s $ruby_bin_dir/$file$ruby_version $BIN_DIR/$file
   done
+
+  ln -s $GEMS_HOME/$ruby_version/bin $GEMS_HOME/bin
 }
 
 remove_symlinks
